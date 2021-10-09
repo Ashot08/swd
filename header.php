@@ -16,51 +16,90 @@
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
-
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,400&display=swap" rel="stylesheet">
 	<?php wp_head(); ?>
 </head>
 
 <body <?php body_class('wrapper'); ?>>
 <?php wp_body_open(); ?>
-<div class="main-sidebar">
-	<ul>
-		<li>1 test</li>
-		<li>2 tse</li>
-		<li>3 test</li>
-	</ul>
-</div>
-<div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'swd' ); ?></a>
-
-	<header id="masthead" class="site-header">
-		<div class="site-branding">
-			<?php
-			the_custom_logo();
-			if ( is_front_page() && is_home() ) :
-				?>
-				<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-				<?php
-			else :
-				?>
-				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
-				<?php
-			endif;
-			$swd_description = get_bloginfo( 'description', 'display' );
-			if ( $swd_description || is_customize_preview() ) :
-				?>
-				<p class="site-description"><?php echo $swd_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-			<?php endif; ?>
-		</div><!-- .site-branding -->
-
-		<nav id="site-navigation" class="main-navigation">
-			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'swd' ); ?></button>
-			<?php
+<aside class="main-sidebar">
+	<span class="main-sidebar__logo">
+		<img src="/img/logo.svg" alt="logo">
+	</span>
+	<?php
+	$swd_description = get_bloginfo( 'description', 'display' );
+	if ( $swd_description || is_customize_preview() ) :
+	?>
+		<p class="site-description"><?php echo $swd_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+	<?php endif; ?>
+	<div class="main-sidebar__menu">
+		<?php
 			wp_nav_menu(
 				array(
 					'theme_location' => 'menu-1',
 					'menu_id'        => 'primary-menu',
+					'menu_class'	 => 'main-sidebar__list'
 				)
 			);
+		?>
+	</div>
+</aside>
+<div id="page" class="site">
+	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'swd' ); ?></a>
+
+	<header id="masthead" class="site-header">
+		<div class="top-header box">
+			<div class="top-header__item">
+				<div class="top-header__phones">
+					<a class="top-header__phone" href="">8 812 300 5888</a>
+					<a class="top-header__phone" href="">8 800 200 7558</a>
+				</div>
+				<div class="top-header__links">
+					<a class="top-header__link" href="">office@dveriswd.com</a>
+					<div class="socials">
+						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/vk.svg" alt="vk social link"></a>
+						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/insta.svg" alt="vk social link"></a>
+						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/fb.svg" alt="vk social link"></a>
+						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/whatsapp.svg" alt="vk social link"></a>
+					</div>
+				</div>
+			</div>
+			<div class="top-header__item">
+				<div class="lang">RU/EN</div>
+				<div class="location">Санкт-Петербург</div>
+				<div class="login-buttons">
+					<button>Стать дилером</button>
+					<button>Войти</button>
+				</div>
+			</div>
+
+
+		</div>
+		<div class="main-header box">
+			<div class="mobile-logo">
+				<?php
+			the_custom_logo();
 			?>
-		</nav><!-- #site-navigation -->
+			</div><!-- .site-branding -->
+
+			<nav id="site-navigation" class="main-navigation">
+				<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'swd' ); ?></button>
+				<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'menu-1',
+				'menu_id'        => 'primary-menu',
+				)
+				);
+				?>
+			</nav><!-- #site-navigation -->
+			<div>
+				<div>Поиск</div>
+				<a href="">Корзина</a>
+				<a href="">Сравнить</a>
+			</div>
+		</div>
+
 	</header><!-- #masthead -->
