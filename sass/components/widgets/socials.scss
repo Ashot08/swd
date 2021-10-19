@@ -1,0 +1,17 @@
+.socials{
+  height: 20px;
+  display: flex;
+}
+.socials__link{
+  margin-right: 10px;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: 0.2s;
+  img{
+    width: 17px;
+    vertical-align: middle;
+  }
+  &:hover{
+    opacity: 1;
+  }
+}

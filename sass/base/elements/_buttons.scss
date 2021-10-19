@@ -9,13 +9,15 @@ input[type="submit"] {
 	color: rgba(255,255,255, 0.9);
 	line-height: 19px;
 	padding: 6px 18px;
-
+	transition: 0.2s;
 	&:hover {
 		border-color: $color__border-button-hover;
+		background-color: darken($color__background-button, 10);
 	}
 
 	&:active,
 	&:focus {
 		border-color: $color__border-button-focus;
 	}
+	cursor: pointer;
 }

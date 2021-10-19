@@ -52,18 +52,10 @@
 	<header id="masthead" class="site-header">
 		<div class="top-header box">
 			<div class="top-header__item">
-				<div class="top-header__phones">
-					<a class="top-header__phone" href="">8 812 300 5888</a>
-					<a class="top-header__phone" href="">8 800 200 7558</a>
-				</div>
+				<?php get_template_part('component-phones');?>
 				<div class="top-header__links">
 					<a class="top-header__link" href="">office@dveriswd.com</a>
-					<div class="socials">
-						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/vk.svg" alt="vk social link"></a>
-						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/insta.svg" alt="vk social link"></a>
-						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/fb.svg" alt="vk social link"></a>
-						<a class="socials__link" href=""><img src="/wp-content/themes/swd/img/whatsapp.svg" alt="vk social link"></a>
-					</div>
+					<?php get_template_part('component-socials');?>
 				</div>
 			</div>
 			<div class="top-header__item">
@@ -74,8 +66,6 @@
 					<button>Войти</button>
 				</div>
 			</div>
-
-
 		</div>
 		<div class="main-header box">
 			<div class="mobile-logo">
