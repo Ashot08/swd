@@ -49,6 +49,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 	- Alignments
 
 --------------------------------------------------------------*/
+@import "fonts";
 
 // Import variables and mixins.
 @import "abstracts/abstracts";
@@ -100,3 +101,9 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 /* Alignments
 --------------------------------------------- */
 @import "utilities/alignments";
+
+
+/* Slick slider
+-----------------------------------------------*/
+@import "../slick/slick";
+@import "../slick/slick-theme";

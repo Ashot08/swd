@@ -144,6 +144,8 @@ function swd_scripts() {
 	wp_style_add_data( 'swd-style', 'rtl', 'replace' );
 
 	wp_enqueue_script( 'swd-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+    wp_enqueue_script( 'ajax', get_template_directory_uri() . '/assets/js/ajax.js', array('jquery'), _S_VERSION, true );
+    wp_enqueue_script( 'slick', get_template_directory_uri() . '/slick/slick.min.js', array('jquery'), _S_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -184,3 +186,174 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/woocommerce.php';
 }
+/**/
+
+/* var dump
+ *****************************************/
+function dump ($arg){
+    echo '<pre>';
+    var_dump($arg);
+    echo '</pre>';
+}
+/**/
+
+
+//ajax products filter
+add_action('wp_ajax_refresh_products_filter', 'refresh_products_filter');
+add_action('wp_ajax_nopriv_refresh_products_filter', 'refresh_products_filter');
+function refresh_products_filter(){
+
+    $search_string = isset($_POST["search_string"]) ? $_POST["search_string"] : null;
+
+    $args = array(
+        'limit' => 5,
+        'like_name' => $search_string,
+        'return' => 'ids',
+    );
+    $ids_by_name = wc_get_products( $args );
+
+    $termIds = get_terms([
+        'name__like' => $search_string,
+        'fields' => 'ids'
+    ]);
+    $ids_by_category_query = array(
+        'limit' => 5,
+        'post_type' => 'product',
+        //'category' => 'misc',
+        //'return' => 'ids',
+        'fields'        => 'ids',
+        'tax_query'             => array(
+            array(
+                'taxonomy'      => 'product_cat',
+                'field' => 'term_id', //This is optional, as it defaults to 'term_id'
+                'terms'         => $termIds,
+                'operator'      => 'IN', // Possible values are 'IN', 'NOT IN', 'AND'.
+                'compare' => 'LIKE'
+            ),
+        )
+    );
+    $ids_by_category = get_posts($ids_by_category_query);
+    if($search_string === ''){
+        echo false;
+    } elseif($ids_by_name || $ids_by_category){
+        $products_ids_string = implode(",", $ids_by_name) . "," . implode(",", $ids_by_category);
+        echo '<div>' . do_shortcode('[products ids=' . $products_ids_string . ']') . '</div>';
+    }else{
+        echo false;
+    }
+
+    wp_die();
+}
+/**/
+
+
+/* wc_get_products filter by like name
+-----------------------------------*/
+add_filter( 'woocommerce_product_data_store_cpt_get_products_query', 'handle_custom_query_var', 10, 2 );
+function handle_custom_query_var( $query, $query_vars ) {
+    if ( isset( $query_vars['like_name'] ) && ! empty( $query_vars['like_name'] ) ) {
+        $query['s'] = esc_attr( $query_vars['like_name'] );
+    }
+    return $query;
+}
+
+/*---------------------------------*/
+
+
+
+//wc add to cart ajax
+add_action('wp_ajax_return_cart', 'return_cart');
+add_action('wp_ajax_nopriv_return_cart', 'return_cart');
+function return_cart(){
+//    global $woocommerce;
+//    $woocommerce->cart->add_to_cart( $product_id = 31, $quantity = 100, $variation_id = 0, $variation = array(), $cart_item_data = array() );
+    echo do_shortcode('[woocommerce_cart]');
+    wp_die();
+}
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_loop_add_to_cart', 30 );
+/**/
+
+
+function add_cors_http_header(){
+    header("Access-Control-Allow-Origin: http://swd:3000");
+}
+add_action('init','add_cors_http_header');
+/**/
+
+
+/*Cart Quantity fields
+--------------------------*/
+// Minimum CSS to remove +/- default buttons on input field type number
+add_action( 'wp_head' , 'custom_quantity_fields_css' );
+function custom_quantity_fields_css(){
+    ?>
+    <style>
+        .quantity input::-webkit-outer-spin-button,
+        .quantity input::-webkit-inner-spin-button {
+            display: none;
+            margin: 0;
+        }
+        .quantity input.qty {
+            appearance: textfield;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+    </style>
+    <?php
+}
+
+add_action( 'wp_footer' , 'custom_quantity_fields_script' );
+function custom_quantity_fields_script(){
+    ?>
+    <script type='text/javascript'>
+        jQuery( function( $ ) {
+            if ( ! String.prototype.getDecimals ) {
+                String.prototype.getDecimals = function() {
+                    var num = this,
+                        match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+                    if ( ! match ) {
+                        return 0;
+                    }
+                    return Math.max( 0, ( match[1] ? match[1].length : 0 ) - ( match[2] ? +match[2] : 0 ) );
+                }
+            }
+            // Quantity "plus" and "minus" buttons
+            $( document.body ).on( 'click', '.plus, .minus', function() {
+                var $qty        = $( this ).closest( '.quantity' ).find( '.qty'),
+                    currentVal  = parseFloat( $qty.val() ),
+                    max         = parseFloat( $qty.attr( 'max' ) ),
+                    min         = parseFloat( $qty.attr( 'min' ) ),
+                    step        = $qty.attr( 'step' );
+
+                // Format values
+                if ( ! currentVal || currentVal === '' || currentVal === 'NaN' ) currentVal = 0;
+                if ( max === '' || max === 'NaN' ) max = '';
+                if ( min === '' || min === 'NaN' ) min = 0;
+                if ( step === 'any' || step === '' || step === undefined || parseFloat( step ) === 'NaN' ) step = 1;
+
+                // Change the value
+                if ( $( this ).is( '.plus' ) ) {
+                    if ( max && ( currentVal >= max ) ) {
+                        $qty.val( max );
+                    } else {
+                        $qty.val( ( currentVal + parseFloat( step )).toFixed( step.getDecimals() ) );
+                    }
+                } else {
+                    if ( min && ( currentVal <= min ) ) {
+                        $qty.val( min );
+                    } else if ( currentVal > 0 ) {
+                        $qty.val( ( currentVal - parseFloat( step )).toFixed( step.getDecimals() ) );
+                    }
+                }
+
+                // Trigger change event
+                $qty.trigger( 'change' );
+            });
+        });
+    </script>
+    <?php
+}
+/*-----------------------------------------*/
+
+

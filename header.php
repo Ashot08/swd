@@ -19,6 +19,11 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,400&display=swap" rel="stylesheet">
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var ajaxUrl = {"url":`http://${window.location.hostname}/wp-admin/admin-ajax.php`};
+        /* ]]> */
+    </script>
 	<?php wp_head(); ?>
 </head>
 
@@ -26,7 +31,7 @@
 <?php wp_body_open(); ?>
 <aside class="main-sidebar">
 	<span class="main-sidebar__logo">
-		<img src="/img/logo.svg" alt="logo">
+		<img src="<?php echo get_template_directory_uri() . '/img/logoSWD.png' ?>" alt="logo">
 	</span>
 	<?php
 	$swd_description = get_bloginfo( 'description', 'display' );
@@ -51,16 +56,16 @@
 
 	<header id="masthead" class="site-header">
 		<div class="top-header box">
-			<div class="top-header__item">
+			<div class="top-header__left">
 				<?php get_template_part('component-phones');?>
 				<div class="top-header__links">
 					<a class="top-header__link" href="">office@dveriswd.com</a>
 					<?php get_template_part('component-socials');?>
 				</div>
 			</div>
-			<div class="top-header__item">
-				<div class="lang">RU/EN</div>
-				<div class="location">Санкт-Петербург</div>
+			<div class="top-header__right">
+				<div class="lang"><?php echo do_shortcode('[google-translator]'); ?></div>
+				<div class="location"><img class="location_marker" src="/wp-content/themes/swd/img/marker.svg" alt="geo marker" /> Санкт-Петербург</div>
 				<div class="login-buttons">
 					<button>Стать дилером</button>
 					<button>Войти</button>
@@ -85,11 +90,15 @@
 				);
 				?>
 			</nav><!-- #site-navigation -->
-			<div>
-				<div>Поиск</div>
-				<a href="">Корзина</a>
-				<a href="">Сравнить</a>
+			<div class="main-header__right">
+				<div class="search search-toggle"><img class="location_marker" src="/wp-content/themes/swd/img/search.svg" alt="search image" />Поиск...</div>
+				<a class="header-cart" href=""><img class="header-cart__image" src="/wp-content/themes/swd/img/cart.svg" alt="cart"></a>
+				<a class="header-compare" href=""><img class="header-compare__image" src="/wp-content/themes/swd/img/compare.svg" alt="cart"></a>
+				<div class="hidden-search">
+                    <input class="hidden-search__input" type="text" value="" placeholder="Я хочу купить..." />
+                    <button class="search-close search-toggle"><img class="hidden-search__close-image" src="/wp-content/themes/swd/img/close.svg" alt="close search" />Закрыть поиск</button>
+                </div>
 			</div>
 		</div>
-
+        <div class="site-header__search-result box"></div>
 	</header><!-- #masthead -->

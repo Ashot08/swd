@@ -74,14 +74,22 @@
 .main-navigation.toggled ul {
 	display: block;
 }
-
+.main-navigation .nav-menu {
+	display: flex;
+	font-size: 18px;
+	font-weight: 600;
+}
+.main-navigation .nav-menu > .menu-item{
+	margin-right: 35px;
+	transition: 0.3s;
+}
 @media screen and (min-width: 37.5em) {
 
 	.menu-toggle {
 		display: none;
 	}
 
-	.main-navigation ul {
+	.main-navigation .nav-menu {
 		display: flex;
 	}
 }

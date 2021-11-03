@@ -1,0 +1,26 @@
+@import "../../abstracts/variables/colors";
+.site-footer{
+  background-color: $color__background-light;
+}
+.site-info{
+  display: grid;
+  grid-gap: 40px;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+}
+.site-info__logo-wrapper{
+  display: flex;
+  justify-content: space-between;
+}
+.site-info__title{
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.site-info__text{
+  font-size: 14px;
+}
+.copyright{
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  font-size: 14px;
+}

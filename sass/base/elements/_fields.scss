@@ -15,12 +15,13 @@ input[type="datetime-local"],
 input[type="color"],
 textarea {
 	color: $color__text-input;
-	border: 1px solid $color__border-input;
-	border-radius: 3px;
+	border: none;
+	border-bottom: 1px solid $color__border-input;
 	padding: 3px;
-
+	outline: none;
 	&:focus {
 		color: $color__text-input-focus;
+		outline: none;
 	}
 }
 

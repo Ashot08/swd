@@ -5,7 +5,8 @@
 /* Posts and pages
 --------------------------------------------- */
 @import "content/posts-and-pages";
-
+@import "content/cart";
+@import "content/footer";
 /* Comments
 --------------------------------------------- */
 @import "comments/comments";
@@ -15,6 +16,7 @@
 @import "widgets/widgets";
 
 @import "widgets/socials";
+@import "widgets/phones";
 /* Media
 --------------------------------------------- */
 @import "media/media";
