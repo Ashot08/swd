@@ -42,6 +42,7 @@
 
 
 /*Search filter*/
+
 const body = jQuery('body');
 const input = jQuery('.hidden-search__input');
 
@@ -55,13 +56,30 @@ jQuery('.search-toggle').click(function () {
     }
 });
 
-jQuery( document ).on( "input", ".hidden-search__input", (e) => {
-    searchQuery(e.target.value);
+jQuery( ".hidden-search__input" ).on( "input", (e) => {
+    const resultBlock = jQuery('.site-header__search-result');
 
+    if(e.target.value.length < 2){
+        resultBlock.html('Не найдено');
+        return;
+    }
+    searchQuery(e.target.value).then(
+        (res) => {
+            if(e.target.value === ''){
+                resultBlock.html('Не найдено');
+                return;
+            }
+            res ? resultBlock.html(res) : resultBlock.html('Не найдено');
+            if(!body.hasClass('with-search')){
+                body.addClass('with-search');
+            }
+        }
+    )
 });
+
 function searchQuery(query){
     const resultBlock = jQuery('.site-header__search-result');
-    jQuery.ajax(
+    return jQuery.ajax(
         {	method: 'Post',
             url: ajaxUrl.url,
             data: {
@@ -69,13 +87,6 @@ function searchQuery(query){
                 search_string: query,
             }
         },
-    ).then(
-        (res) => {
-            res ? resultBlock.html(res) : resultBlock.html('Не найдено');
-            if(!body.hasClass('with-search')){
-                body.addClass('with-search');
-            }
-        }
     )
 }
 

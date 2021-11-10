@@ -204,9 +204,12 @@ add_action('wp_ajax_nopriv_refresh_products_filter', 'refresh_products_filter');
 function refresh_products_filter(){
 
     $search_string = isset($_POST["search_string"]) ? $_POST["search_string"] : null;
+    $offset = 0;
+    $limit = -1;
 
     $args = array(
-        'limit' => 5,
+        'limit' => $limit,
+        'offset' => $offset,
         'like_name' => $search_string,
         'return' => 'ids',
     );
@@ -216,11 +219,11 @@ function refresh_products_filter(){
         'name__like' => $search_string,
         'fields' => 'ids'
     ]);
+
     $ids_by_category_query = array(
-        'limit' => 5,
+        'numberposts' => $limit,
+        'offset' => $offset,
         'post_type' => 'product',
-        //'category' => 'misc',
-        //'return' => 'ids',
         'fields'        => 'ids',
         'tax_query'             => array(
             array(
@@ -233,13 +236,10 @@ function refresh_products_filter(){
         )
     );
     $ids_by_category = get_posts($ids_by_category_query);
-    if($search_string === ''){
-        echo false;
-    } elseif($ids_by_name || $ids_by_category){
+
+    if($ids_by_name || $ids_by_category){
         $products_ids_string = implode(",", $ids_by_name) . "," . implode(",", $ids_by_category);
-        echo '<div>' . do_shortcode('[products ids=' . $products_ids_string . ']') . '</div>';
-    }else{
-        echo false;
+        echo '<div>' . do_shortcode('[products ids=' . $products_ids_string . ' ]') . '</div>';
     }
 
     wp_die();
